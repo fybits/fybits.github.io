@@ -69,10 +69,11 @@ function setPixel(x, y, c) {
 }
 
 async function fillBucket(x, y, c) {
+  const baseColor = getPixel(x, y);
+  if (isColorsEqual(baseColor, c.levels)) return;
   const stack = [];
   stack.push({ x, y })
   loadPixels();
-  const baseColor = getPixel(x, y);
   while (stack.length) {
     const currentPos = stack.pop()
     if (isInBounds(currentPos.x, currentPos.y)) {
