@@ -32,14 +32,6 @@ function clearScreen () {
   }
 }
 
-function autoRedraw(drawFunc, ...args) {
-  return function() {
-    loadPixels();
-    drawFunc(...args);
-    updatePixels();
-  }
-}
-
 function isColorsEqual(a, b) {
   for (let i = 0; i < 3; i++) {
     if (a[i] !== b[i]) return false;
@@ -115,9 +107,11 @@ const pencilTool = {
   },
   onUpdate() {
     if (this.isDrawing) {
+      loadPixels();
       drawLine(mousePos.x, mousePos.y, lastMousePos.x, lastMousePos.y, color(colorName))
       lastMousePos.x = mousePos.x;
       lastMousePos.y = mousePos.y;
+      updatePixels();
     }
   },
   onUp() {
@@ -145,6 +139,7 @@ function setup () {
   document.body.addEventListener('mousemove', (event) => {
     mousePos.x = event.clientX - rect.x;
     mousePos.y = event.clientY - rect.y;
+    tools[toolIndex].onUpdate();
   });
 
   canvas.addEventListener('mousedown', () => tools[toolIndex].onDown());
@@ -175,10 +170,3 @@ function setup () {
   const saveButton = document.querySelector('#save-button');
   saveButton.addEventListener('click', () => save('myCanvas.jpg'));
 }
-
-function draw() {
-  loadPixels();
-  tools[toolIndex].onUpdate();
-  updatePixels();
-}
-
