@@ -4,6 +4,7 @@ let interfaceLayer;
 let tempLayer;
 let mainLayer;
 
+// Заполнение области для рисования цветом фона
 function clearScreen () {
   for (let x = 0; x <= width; x++) {
     for (let y = 0; y <= height; y++) {
@@ -12,6 +13,7 @@ function clearScreen () {
   }
 }
 
+// Вывод прямой линии
 function drawLine(x0, y0, x1, y1, c, layer = mainLayer) {
   const deltaX = Math.abs(x1 - x0);
   const deltaY = Math.abs(y1 - y0);
@@ -38,6 +40,7 @@ function drawLine(x0, y0, x1, y1, c, layer = mainLayer) {
   }
 }
 
+// Вывод прямоугольника
 function drawBow(x0, y0, x1, y1, c, layer = mainLayer) {
   drawLine(x0, y0, x1, y0, c, layer);
   drawLine(x0, y0, x0, y1, c, layer);
@@ -45,6 +48,7 @@ function drawBow(x0, y0, x1, y1, c, layer = mainLayer) {
   drawLine(x1, y0, x1, y1, c, layer);
 }
 
+// Установка цвета для пикселя на слое
 function setPixel(x, y, c, layer = mainLayer) {
   const index = (x + y * width) * 4;
   layer[index] = c.levels[0];
@@ -53,11 +57,13 @@ function setPixel(x, y, c, layer = mainLayer) {
   layer[index + 3] = c.levels[3];
 }
 
+// ???
 const LEFT = 0b0001;
 const RIGHT = 0b0010;
 const BOTTOM = 0b0100;
 const TOP = 0b1000;
 
+// ???
 function computeSign(x, y, box) {
   let sign = 0;
   sign |= x < box.x0 && LEFT;
@@ -67,6 +73,7 @@ function computeSign(x, y, box) {
   return sign;
 }
 
+// Отсечение отрезка окном
 function trimLine(line, box) {
   if (box.x0 > box.x1) [box.x0, box.x1] = [box.x1, box.x0];
   if (box.y0 > box.y1) [box.y0, box.y1] = [box.y1, box.y0];
@@ -125,13 +132,16 @@ function trimLine(line, box) {
     };
 }
 
+// Предыдущее и текущее состояние мыши
 const prevMouse = { x: 0, y: 0 };
 const mouse = { x: 0, y: 0, isDown: false };
 
+// Раздел инструментов
 let toolIndex = 0;
 let colorIndex = 0;
 let colorName = '';
 
+// Инструмент "Область"
 const maskBoxTool = {
   buttonId: '#maskbox-button',
   currBox: { x0: null, y0: null, x1: null, y1: null },
@@ -171,6 +181,7 @@ const maskBoxTool = {
   },
 };
 
+// Инструмент "Отрезок"
 const collidingLineTool = {
   buttonId: '#line-button',
   startPos: { x: null, y: null },
@@ -203,13 +214,16 @@ const collidingLineTool = {
 
 const tools = [ maskBoxTool, collidingLineTool ];
 
+// Запускается библиотекой p5 один раз при открытии страницы
 function setup () {
   createCanvas(window.innerWidth, window.innerHeight, 'WEBGL');
 
+  // Заполнение области для рисования цветом фона
   loadPixels();
   clearScreen();
   updatePixels();
 
+  // Инициализация слоёв
   interfaceLayer = new Uint8ClampedArray(pixels.length);
   tempLayer = new Uint8ClampedArray(pixels.length);
   mainLayer = new Uint8ClampedArray(pixels.length);
@@ -219,6 +233,7 @@ function setup () {
   const canvas = document.querySelector('#defaultCanvas0');
   const rect = canvas.getBoundingClientRect();
 
+  // Обработка события движения мыши
   document.body.addEventListener('mousemove', (event) => {
     mouse.x = event.clientX - rect.x;
     mouse.y = event.clientY - rect.y;
@@ -227,6 +242,7 @@ function setup () {
     prevMouse.y = mouse.y;
   });
 
+  // Обработка события нажатия кнопки мыши
   canvas.addEventListener('mousedown', () => {
     if (mouse.isDown) return;
 
@@ -234,6 +250,7 @@ function setup () {
     mouse.isDown = true;
   });
 
+  // Обработка события отпускания кнопки мыши
   document.body.addEventListener('mouseup', () => {
     if (!mouse.isDown) return;
 
@@ -241,6 +258,7 @@ function setup () {
     mouse.isDown = false;
   });
 
+  // Инициализация инструментов. Связь инструментов с их кнопками
   tools.forEach(tool => tool.onSetup());
   const toolsButtons = tools.map(tool => document.querySelector(tool.buttonId));
   toolsButtons[toolIndex].classList.add('active');
@@ -250,6 +268,7 @@ function setup () {
     button.classList.add('active');
   }));
 
+  // Инициализация палитры. Связь кнопок с их цветами
   const colorButtons = document.querySelectorAll('.toolbar-item.color-circle');
   colorButtons[colorIndex].classList.add('active');
   colorName = colorButtons[colorIndex].getAttribute('data-color');
@@ -260,6 +279,7 @@ function setup () {
     button.classList.add('active');
   }));
 
+  // Связь функции сохранения с кнопкой
   const saveButton = document.querySelector('#save-button');
   saveButton.addEventListener('click', () => {
     loadPixels();
@@ -271,11 +291,13 @@ function setup () {
   });
 }
 
+// Запускается библиотекой p5 на каждом кадре
 function draw() {
   loadPixels();
 
   let i = 0
   while (i < pixels.length) {
+    // Выбор слоя для отрисовки текущего пикселя
     const layer = layersOrder.find(l => l[i + 3]) || layersOrder[layersOrder.length - 1];
 
     pixels[i] = layer[i]; i++;
