@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lab 4</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.min.js"></script>
+  <script defer src="js/main.js"></script>
+  <style>
+    body {
+      padding: 0;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      background-color: black;
+      user-select: none;
+    }
+    .side-menu-left {
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    .toolbar {
+      color: white;
+      padding: 12px 7px;
+      margin: 20px;
+      border: white solid 2px;
+      border-radius: 10px;
+      font-size: 1.6em;
+      background-color: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+    }
+    .side-menu-right {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+    .toolbar-section-header {
+      font-family: monospace;
+      font-weight: bold;
+      text-align: center;
+      font-size: 1.3em;
+      margin-bottom: 0.4em;
+    }
+    svg {
+      stroke: white;
+      fill: white;
+      height: 100%;
+      width: 100%;
+    }
+    .toolbar-item {
+      height: 2em;
+      width: 2em;
+      padding: 5px;
+      transition-property: transform;
+      transition-duration: 0.1s;
+      transition-timing-function: ease-out;
+    }
+    .toolbar-item:hover {
+      transform: scale(1.1, 1.1);
+    }
+    .toolbar-item.active {
+      transform: scale(1.3, 1.3);
+    }
+    .color-circle {
+      border-radius: 50%;
+      margin-top: 10px;
+      border: white 2px solid;
+    }
+  </style>
+</head>
+<body oncontextmenu="return false;">
+  <div class="side-menu-left">
+    <div class="toolbar">
+      <div class="toolbar-section-header">TOOLS</div>
+      <div class="toolbar-item" id="maskbox-button">
+        <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 480 480" style="enable-background:new 0 0 480 480;" xml:space="preserve"><path d="M472,72H8c-4.418,0-8,3.582-8,8v320c0,4.418,3.582,8,8,8h464c4.418,0,8-3.582,8-8V80C480,75.582,476.418,72,472,72z M464,392H16V88h448V392z"/><path d="M80,152h64v-48H32v112h48V152z M64,200H48v-80h80v16H64V200z"/><path d="M448,264h-48v64h-64v48h112V264z M432,360h-80v-16h64v-64h16V360z"/></svg>
+      </div>
+      <div class="toolbar-item" id="line-button">
+        <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve"><path d="M497,0h-60c-8.291,0-15,6.709-15,15v53.789L70.789,420H15c-8.291,0-15,6.709-15,15v62c0,8.291,6.709,15,15,15h62 c8.291,0,15-6.709,15-15v-55.789L443.211,90H497c8.291,0,15-6.709,15-15V15C512,6.709,505.291,0,497,0z"/></svg>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div class="toolbar-section-header">COLORS</div>
+      <div class="toolbar-item color-circle" style="background-color: white;" data-color="white" id="white-button"></div>
+      <div class="toolbar-item color-circle" style="background-color: black;" data-color="black" id="black-button"></div>
+      <div class="toolbar-item color-circle" style="background-color: red;" data-color="red" id="red-button"></div>
+      <div class="toolbar-item color-circle" style="background-color: orange;" data-color="orange" id="orange-button"></div>
+      <div class="toolbar-item color-circle" style="background-color: yellow;" data-color="yellow" id="yellow-button"></div>
+      <div class="toolbar-item color-circle" style="background-color: green;" data-color="green" id="green-button"></div>
+      <div class="toolbar-item color-circle" style="background-color: blue;" data-color="blue" id="blue-button"></div>
+      <div class="toolbar-item color-circle" style="background-color: purple;" data-color="purple" id="purple-button"></div>
+    </div>
+  </div>
+  <div class="side-menu-right toolbar">
+    <div class="toolbar-section-header">SAVE</div>
+    <div class="toolbar-item" id="save-button">
+      <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" 	 width="438.533px" height="438.533px" viewBox="0 0 438.533 438.533" style="enable-background:new 0 0 438.533 438.533;" 	 xml:space="preserve"> <g> 	<path d="M432.823,121.049c-3.806-9.132-8.377-16.367-13.709-21.695l-79.941-79.942c-5.325-5.325-12.56-9.895-21.696-13.704 		C308.346,1.903,299.969,0,292.357,0H27.409C19.798,0,13.325,2.663,7.995,7.993c-5.33,5.327-7.992,11.799-7.992,19.414v383.719 		c0,7.617,2.662,14.089,7.992,19.417c5.33,5.325,11.803,7.991,19.414,7.991h383.718c7.618,0,14.089-2.666,19.417-7.991 		c5.325-5.328,7.987-11.8,7.987-19.417V146.178C438.531,138.562,436.629,130.188,432.823,121.049z M182.725,45.677 		c0-2.474,0.905-4.611,2.714-6.423c1.807-1.804,3.949-2.708,6.423-2.708h54.819c2.468,0,4.609,0.902,6.417,2.708 		c1.813,1.812,2.717,3.949,2.717,6.423v91.362c0,2.478-0.91,4.618-2.717,6.427c-1.808,1.803-3.949,2.708-6.417,2.708h-54.819 		c-2.474,0-4.617-0.902-6.423-2.708c-1.809-1.812-2.714-3.949-2.714-6.427V45.677z M328.906,401.991H109.633V292.355h219.273 		V401.991z M402,401.991h-36.552h-0.007V283.218c0-7.617-2.663-14.085-7.991-19.417c-5.328-5.328-11.8-7.994-19.41-7.994H100.498 		c-7.614,0-14.087,2.666-19.417,7.994c-5.327,5.328-7.992,11.8-7.992,19.417v118.773H36.544V36.542h36.544v118.771 		c0,7.615,2.662,14.084,7.992,19.414c5.33,5.327,11.803,7.993,19.417,7.993h164.456c7.61,0,14.089-2.666,19.41-7.993 		c5.325-5.327,7.994-11.799,7.994-19.414V36.542c2.854,0,6.563,0.95,11.136,2.853c4.572,1.902,7.806,3.805,9.709,5.708l80.232,80.23 		c1.902,1.903,3.806,5.19,5.708,9.851c1.909,4.665,2.857,8.33,2.857,10.994V401.991z"/> </g> </svg>
+    </div>
+  </div>
+</body>
+
+</html>
