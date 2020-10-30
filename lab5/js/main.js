@@ -126,7 +126,6 @@ function trimPolygon(verticies, box) {
 
 const prevMouse = { x: 0, y: 0 };
 const mouse = { x: 0, y: 0, isDown: false };
-let doubleClickTimeout;
 
 
 let toolIndex = 0;
@@ -287,10 +286,6 @@ function setup () {
     tools[toolIndex].onDown();
     mouse.isDown = true;
   });
-
-  canvas.addEventListener('', () => {
-
-  })
 
   document.body.addEventListener('mouseup', () => {
     if (!mouse.isDown) return;
