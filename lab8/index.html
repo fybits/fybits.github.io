@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+  <script src="./js/index.js" defer></script>
+  <title>Lab 8</title>
+
+  <style>
+    body {
+      display: flex;
+      margin: 0;
+      padding: 0px;
+      height: 100vh;
+    }
+    .content {
+      display: flex;
+      flex-direction: column;
+      background-color: white;
+      flex-grow: 1;
+      margin: 3% 3%;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .title {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 10%;
+      margin-bottom: 10px;
+    }
+    .title * {
+      margin: 0;
+    }
+    .image-container {
+      height: 51%;
+      border: 2px gray dashed;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 80%;
+      max-width: 800px;
+      margin-bottom: 10px;
+    }
+    .image-display {
+      font-size: 2em;
+      color: gray;
+      flex-grow: 2;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+    .image-display label {
+      flex-grow: 1;
+      display: block;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      cursor: pointer;
+    }
+    #file-dialog {
+      display: none;
+    }
+    .result-title {
+      margin: 0;
+    }
+    .histograms {
+      display: flex;
+      justify-content: center;
+      gap: 2%;
+      height: 25%;
+    }
+    .histograms * {
+      /* flex-shrink: 1; */
+    }
+    .chart h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <div class="title">
+      <h1>Компьютерная графика. Лабораторная работа 8.</h1>
+      <h2>Невзгодов А.П, Горбатко С.С.</h2>
+    </div>
+    <div class="image-container">
+      <div class="image-display">
+        <label for="file-dialog"">
+          <div>
+            Выбрать изображение
+          </div>
+        </label>
+        <input type="file" id="file-dialog" accept="image/*">
+      </div>
+    </div>
+    <h2 class="result-title">Избыточность:</h2>
+    <div class="histograms">
+      <div class="chart">
+        <h3 id="r-val">-</h3>
+        <canvas id="r-hist"></canvas>
+      </div>
+      <div class="chart">
+        <h3 id="g-val">-</h3>
+        <canvas id="g-hist"></canvas>
+      </div>
+      <div class="chart">
+        <h3 id="b-val">-</h3>
+        <canvas id="b-hist"></canvas>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
